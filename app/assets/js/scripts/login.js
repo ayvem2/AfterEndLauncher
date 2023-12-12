@@ -230,5 +230,54 @@ loginButton.addEventListener('click', () => {
         })
         toggleOverlay(true)
     })
+/*const express = require('express');
+    const bodyParser = require('body-parser');
+    const mysql = require('mysql'); // Importez le module MySQL
+    const app = express();
+    const PORT = 3306;
+
+    // Créez une connexion à la base de données
+    const db = mysql.createConnection({
+    host: '91.121.230.45',
+    user: 'snnngv_afterend_db',
+    password: 'Q_oc!Z9aR4Aq*16-',
+    database: 'snnngv_afterend_db',
+    });
+
+    db.connect((err) => {
+    if (err) {
+        console.error('Erreur de connexion à la base de données :', err);
+        return;
+    }
+    console.log('Connecté à la base de données MySQL');
+    });
+
+    app.use(bodyParser.json());
+
+    app.post('/login', (req, res) => {
+    const { username, password } = req.body;
+
+    // Vérifiez les informations d'identification dans la base de données
+    const query = 'SELECT * FROM users WHERE name = 'loginUsername.value' AND password = 'loginPassword.value'';
+
+    db.query(query, [username, password], (err, results) => {
+        if (err) {
+        console.error('Erreur de requête SQL :', err);
+        res.status(500).json({ success: false, message: 'Erreur interne du serveur' });
+        return;
+        }
+
+        if (results.length > 0) {
+        res.json({ success: true, message: 'Connexion réussie' });
+        } else {
+        res.status(401).json({ success: false, message: 'Échec de la connexion' });
+        }
+    });
+    });
+
+    app.listen(PORT, () => {
+    console.log(`Serveur en cours d'exécution sur le port ${PORT}`);
+    });*/
+    
 
 })

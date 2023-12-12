@@ -29,33 +29,49 @@ const log = LoggerUtil.getLogger('AuthManager')
  * @param {string} password The account password.
  * @returns {Promise.<Object>} Promise which resolves the resolved authenticated account object.
  */
-exports.addMojangAccount = async function(username, password) {
-    try {
-        const response = await MojangRestAPI.authenticate(username, password, ConfigManager.getClientToken())
-        console.log(response)
-        if(response.responseStatus === RestResponseStatus.SUCCESS) {
+const mysql = require('mysql');
 
-            const session = response.data
-            if(session.selectedProfile != null){
-                const ret = ConfigManager.addMojangAuthAccount(session.selectedProfile.id, session.accessToken, username, session.selectedProfile.name)
-                if(ConfigManager.getClientToken() == null){
-                    ConfigManager.setClientToken(session.clientToken)
-                }
-                ConfigManager.save()
-                return ret
-            } else {
-                return Promise.reject(mojangErrorDisplayable(MojangErrorCode.ERROR_NOT_PAID))
+// Créez une connexion à la base de données MySQL
+const db = mysql.createConnection({
+    host: '91.121.230.45',
+    user: 'snnngv_afterend_db',
+    password: 'Q_oc!Z9aR4Aq*16-',
+    database: 'snnngv_afterend_db',
+});
+
+db.connect((err) => {
+    if (err) {
+        console.error('Erreur de connexion à la base de données :', err);
+        return;
+    }
+    console.log('Connecté à la base de données MySQL');
+});
+
+// Remplacez la fonction addMojangAccount par cette nouvelle fonction
+exports.addMojangAccount = async function(username, password) {
+    return new Promise((resolve, reject) => {
+        const query = 'SELECT * FROM users WHERE name = ? AND password = ?';
+        
+        db.query(query, [username, password], (err, results) => {
+            if (err) {
+                console.error('Erreur de requête SQL :', err);
+                reject('Erreur interne du serveur');
+                return;
             }
 
-        } else {
-            return Promise.reject(mojangErrorDisplayable(response.mojangErrorCode))
-        }
-        
-    } catch (err){
-        log.error(err)
-        return Promise.reject(mojangErrorDisplayable(MojangErrorCode.UNKNOWN))
-    }
-}
+            if (results.length > 0) {
+                const user = results[0];
+                // Stockez les informations d'authentification dans la base de données
+                // Vous devrez définir la structure de votre table pour stocker ces informations
+                // Par exemple, vous pouvez avoir une table users avec des colonnes id, username, password, etc.
+                // Effectuez la requête d'insertion ici en fonction de votre structure de base de données.
+                resolve({ success: true, message: 'Connexion réussie' });
+            } else {
+                reject('Échec de la connexion');
+            }
+        });
+    });
+};
 
 const AUTH_MODE = { FULL: 0, MS_REFRESH: 1, MC_REFRESH: 2 }
 
