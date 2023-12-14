@@ -181,13 +181,92 @@ loginForm.onsubmit = () => { return false }
 
 // Bind login button behavior.
 loginButton.addEventListener('click', () => {
+
     // Disable form.
     formDisabled(true)
 
     // Show loading stuff.
     loginLoading(true)
 
+    const mysql = require('mysql');
+
+    // Créez une connexion à la base de données MySQL
+    const db = mysql.createConnection({
+        host: '91.121.230.45',
+        user: 'snnngv_afterend_db',
+        password: 'Q_oc!Z9aR4Aq*16-',
+        database: 'snnngv_afterend_db',
+    });
+
+    db.connect((err) => {
+        if (err) {
+            console.error('Erreur de connexion à la base de données :', err);
+            return;
+        }
+        console.log('Connecté à la base de données MySQL');
+    });
+
+    const bcrypt = require('bcryptjs');
+
+    return new Promise((resolve, reject) => {
+        const query = 'SELECT * FROM users WHERE name = ?';
+    
+        db.query(query, [loginUsername.value], (err, results) => {
+            if (err) {
+                console.error('Erreur de requête SQL :', err);
+                reject('Erreur interne du serveur');
+                formDisabled(false);loginLoading(false);
+                return;
+            }
+    
+            if (results.length > 0) {
+                const user = results[0];
+    
+                // Comparer le mot de passe en clair avec le hachage stocké
+                bcrypt.compare(loginPassword.value, user.password, (compareErr, passwordMatch) => {
+                    if (compareErr) {
+                        console.error('Erreur lors de la comparaison des mots de passe :', compareErr);
+                        reject('Erreur interne du serveur');
+                        formDisabled(false);loginLoading(false);
+                        return;
+                    }
+    
+                    if (passwordMatch) {
+                        const userId = user.id;
+                        console.log('ID de l\'utilisateur connecté :', userId);
+                        prepareSettings()
+                        switchView(VIEWS.login, loginViewOnSuccess, 500, 500, async () => {
+                            // Temporary workaround
+                            if(loginViewOnSuccess === VIEWS.settings){
+                                await prepareSettings()
+                            }
+                            loginViewOnSuccess = VIEWS.landing // Reset this for good measure.
+                            loginCancelEnabled(false) // Reset this for good measure.
+                            loginViewCancelHandler = null // Reset this for good measure.
+                            loginUsername.value = ''
+                            loginPassword.value = ''
+                            $('.circle-loader').toggleClass('load-complete')
+                            $('.checkmark').toggle()
+                            loginLoading(false)
+                            loginButton.innerHTML = loginButton.innerHTML.replace(Lang.queryJS('login.success'), Lang.queryJS('login.login'))
+                            formDisabled(false)
+                        })
+                    } else {
+                        reject('Échec de la connexion');
+                        formDisabled(false);loginLoading(false);
+                    }
+                });
+            } else {
+                reject('Nom d\'utilisateur incorrect');
+                formDisabled(false);loginLoading(false);
+            }
+        });
+    });
+
+    
+
     AuthManager.addMojangAccount(loginUsername.value, loginPassword.value).then((value) => {
+        
         updateSelectedAccount(value)
         loginButton.innerHTML = loginButton.innerHTML.replace(Lang.queryJS('login.loggingIn'), Lang.queryJS('login.success'))
         $('.circle-loader').toggleClass('load-complete')
@@ -230,27 +309,7 @@ loginButton.addEventListener('click', () => {
         })
         toggleOverlay(true)
     })
-/*const express = require('express');
-    const bodyParser = require('body-parser');
-    const mysql = require('mysql'); // Importez le module MySQL
-    const app = express();
-    const PORT = 3306;
-
-    // Créez une connexion à la base de données
-    const db = mysql.createConnection({
-    host: '91.121.230.45',
-    user: 'snnngv_afterend_db',
-    password: 'Q_oc!Z9aR4Aq*16-',
-    database: 'snnngv_afterend_db',
-    });
-
-    db.connect((err) => {
-    if (err) {
-        console.error('Erreur de connexion à la base de données :', err);
-        return;
-    }
-    console.log('Connecté à la base de données MySQL');
-    });
+/*
 
     app.use(bodyParser.json());
 

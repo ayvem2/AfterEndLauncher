@@ -11,13 +11,13 @@
     "rss": "https://forum.westeroscraft.com/forum/news.2/index.rss",
     "servers": [
         {
-            "id": "WesterosCraft-1.11.2",
-            "name": "WesterosCraft Production Server",
+            "id": "AfterEnd-1.0.0",
+            "name": "AfterEnd Server",
             "description": "Main WesterosCraft server. Connect to enter the Realm.",
             "icon": "http://mc.westeroscraft.com/WesterosCraftLauncher/files/server-prod.png",
-            "version": "3.9.4",
-            "address": "mc.westeroscraft.com",
-            "minecraftVersion": "1.11.2",
+            "version": "1.0.0",
+            "address": "afterend.ouimc.eu",
+            "minecraftVersion": "1.19.2",
             "discord": {
                 "shortId": "Production",
                 "largeImageText": "WesterosCraft Production Server",
