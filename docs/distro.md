@@ -17,17 +17,17 @@ The distribution index is written in JSON. The general format of the index is as
     "rss": "https://westeroscraft.com/articles/index.rss",
     "servers": [
         {
-            "id": "Example_Server",
-            "name": "WesterosCraft Example Client",
-            "description": "Example WesterosCraft server. Connect for fun!",
-            "icon": "http://mc.westeroscraft.com/WesterosCraftLauncher/files/example_icon.png",
-            "version": "0.0.1",
-            "address": "mc.westeroscraft.com:1337",
-            "minecraftVersion": "1.11.2",
+            "id": "AfterEnd-1.0.0",
+            "name": "AfterEnd Server",
+            "description": "AfterEnd Official Server",
+            "icon": "",
+            "version": "1.0.0",
+            "address": "afterend.ouimc.eu",
+            "minecraftVersion": "1.19.2",
             "discord": {
-                "shortId": "Example",
-                "largeImageText": "WesterosCraft Example Server",
-                "largeImageKey": "server-example"
+                "shortId": "Production",
+                "largeImageText": "WesterosCraft Production Server",
+                "largeImageKey": "server-prod"
             },
             "mainServer": true,
             "autoconnect": true,
@@ -65,7 +65,7 @@ Global settings for [Discord Rich Presence](https://discordapp.com/developers/do
 
 **Properties**
 
-* `discord.clientId: string` - Client ID for th Application registered with Discord.
+* `discord.clientId: string` - Client ID for tistered with Disch Application regord.
 * `discord.smallImageText: string` - Tootltip for the `smallImageKey`.
 * `discord.smallImageKey: string` - Name of the uploaded image for the small profile artwork.
 
@@ -81,17 +81,17 @@ A URL to a RSS feed. Used for loading news.
 #### Example
 ```JSON
 {
-    "id": "Example_Server",
-    "name": "WesterosCraft Example Client",
-    "description": "Example WesterosCraft server. Connect for fun!",
-    "icon": "http://mc.westeroscraft.com/WesterosCraftLauncher/files/example_icon.png",
-    "version": "0.0.1",
-    "address": "mc.westeroscraft.com:1337",
-    "minecraftVersion": "1.11.2",
+    "id": "AfterEnd-1.0.0",
+    "name": "AfterEnd Server",
+    "description": "AfterEnd Official Server",
+    "icon": "",
+    "version": "1.0.0",
+    "address": "afterend.ouimc.eu",
+    "minecraftVersion": "1.19.2",
     "discord": {
-        "shortId": "Example",
-        "largeImageText": "WesterosCraft Example Server",
-        "largeImageKey": "server-example"
+        "shortId": "Production",
+        "largeImageText": "WesterosCraft Production Server",
+        "largeImageKey": "server-prod"
     },
     "mainServer": true,
     "autoconnect": true,
