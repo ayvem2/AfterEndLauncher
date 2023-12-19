@@ -97,109 +97,30 @@ function setLaunchEnabled(val){
     document.getElementById('launch_button').disabled = !val
 }
 
-const { execSync } = require('child_process');
-const https = require('https');
-const fs = require('fs');
-const { join } = require('path');
-const Client = require('ftp');
-
-const javaRemoteFilePath = '/httpdocs/after-end/JavaSetup8u391.exe';
-const javaLocalFilePath = 'JavaSetup8u391.exe';
-const forgeRemoteFilePath = '/httpdocs/after-end/forge-1.12.2-14.23.5.2859-installer.jar';
-const forgeLocalFilePath = 'forge-1.12.2-14.23.5.2859-installer.jar';
-const minecraftDir = 'C:\\Users\\maman\\AppData\\Roaming\\.minecraft';
-
-// Configuration du serveur FTP
-const ftpConfig = {
-    host: '91.121.230.45',
-    port: 21,
-    user: 'lwnrro_afterend_ftp',
-    password: 'U-!8Q*0m9ul1nL%M',
-  };
-
 // Bind launch button
 document.getElementById('launch_button').addEventListener('click', async e => {
     loggerLanding.info('Launching game..')
     try {
-        run();
+        // Import the minecraft-launcher-core module
+        const minecraftLauncher = require('minecraft-launcher-core');
+
+        // Define the version of Forge you want to download
+        const forgeVersion = '1.12.2';
+
+        // Define the path where you want to save the Forge installer
+        const forgePath = './forge-' + forgeVersion + '-universal.jar';
+
+        // Download the Forge installer from the official website
+        minecraftLauncher.downloadForge(forgePath);
+
+        // Launch Minecraft with Forge
+        minecraftLauncher.launchMinecraft(forgePath);
+
     } catch (err) {
         loggerLanding.error('Unhandled error during launch process.', err)
         showLaunchFailure(Lang.queryJS('landing.launch.failureTitle'), Lang.queryJS('landing.launch.failureText'))
     }
 })
-
-async function run() {
-    try {
-      // Téléchargement de Forge
-      console.log('Téléchargement de Forge...');
-      await downloadFileViaFTP(ftpConfig, forgeRemoteFilePath, forgeLocalFilePath);
-  
-      // Installation manuelle de Forge (avec interaction utilisateur)
-      console.log('Veuillez installer Forge manuellement en utilisant le fichier : forge-installer.jar');
-  
-      // Attendre que l'utilisateur ait terminé l'installation manuelle
-  
-      // Copie des fichiers nécessaires après l'installation manuelle
-      const srcDir = 'chemin/vers/dossier/forge-installer-resultat';
-      const destDir = join(minecraftDir, 'mods');
-  
-      // Copie des fichiers vers le dossier des mods de Minecraft
-      console.log(`Copie des fichiers depuis ${srcDir} vers ${destDir}...`);
-      fs.readdirSync(srcDir).forEach(file => {
-        const srcFile = join(srcDir, file);
-        const destFile = join(destDir, file);
-        fs.copyFileSync(srcFile, destFile);
-      });
-  
-      console.log('Terminé !');
-    } catch (error) {
-      console.error('Une erreur s\'est produite :', error.message);
-    }
-  }
-// Assumez que cette fonction récupère le serveur par ID depuis une source appropriée
-function getServerById(serverId) {
-    return getServerStatus("aa", "bb")
-}
-
-function downloadFileViaFTP(ftpConfig, remoteFilePath, localFilePath) {
-    return new Promise((resolve, reject) => {
-      const ftp = new Client();
-      ftp.on('ready', () => {
-        ftp.get(remoteFilePath, (err, stream) => {
-          if (err) {
-            reject(err);
-          }
-          stream.once('close', () => {
-            ftp.end();
-            resolve();
-          });
-          stream.pipe(fs.createWriteStream(localFilePath));
-        });
-      });
-      ftp.connect(ftpConfig);
-    });
-  }
-
-  async function installMinecraft() {
-    try {
-      // Download Minecraft launcher JAR file
-      console.log('Downloading Minecraft launcher...');
-      await downloadFileViaFTP(minecraftLauncherUrl, 'MinecraftInstaller.msi');
-  
-      // Run the installer (modify this command based on your launcher setup)
-      console.log('Running Minecraft installer...');
-      execSync('msiexec /i MinecraftInstaller.msi /quiet', { stdio: 'inherit' });
-  
-      // Launch Minecraft (modify this command based on your launcher setup)
-      console.log('Launching Minecraft...');
-      execSync('minecraft_launcher.exe', { cwd: minecraftInstallDir, stdio: 'inherit' });
-  
-      console.log('Installation and launch completed successfully!');
-    } catch (error) {
-      console.error('An error occurred:', error.message);
-    }
-  }
-
 //-------------------------------------------------------------------------
 // Bind settings button
 document.getElementById('settingsMediaButton').onclick = async e => {
